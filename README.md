@@ -1,98 +1,120 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+## 📃 Sobre o Projeto
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Este é um sistema **multi-tenant** desenvolvido com **NestJS** e **Prisma ORM**, onde cada loja tem seus próprios dados isolados. Os módulos incluem autenticação, gerenciamento de lojas, produtos, clientes, criação de funcionarios, orçamentos e controle financeiro.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+**Estrutura multitenant**: os dados de cada loja (usuários, produtos, clientes, etc.) são associados a um identificador da loja (`lojaId`), permitindo um banco compartilhado com separação lógica.
 
-## Description
+## 📂 Estrutura de Pastas
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Project setup
-
-```bash
-$ npm install
+```
+/pasta-raiz-do-projeto
+├── prisma/
+│   └── schema.prisma         # Schema do banco com Prisma ORM
+│
+├── src/
+│   ├── lib/
+│   │   └── prisma.ts         # Instância do PrismaClient
+│   │
+│   ├── middlewares/
+│   │   └── auth.guard.ts     # Middleware de autenticação com JWT
+│   │
+│   ├── models/
+│   │   ├── auth/             # Cadastro e login de usuários e lojas
+│   │   ├── lojas/            # CRUD de lojas
+│   │   ├── clientes/         # CRUD de clientes
+│   │   ├── produtos/         # CRUD de produtos
+│   │   ├── orcamentos/       # Criação e aprovação de orçamentos
+│   │   └── financeiro/       # Entradas e saídas financeiras por loja
+│   │
+│   ├── app.module.ts         # Módulo principal da aplicação
+│   └── main.ts               # Arquivo de bootstrap da aplicação
+│
+├── .env                      # Variáveis de ambiente (como DATABASE_URL)
+└── README.md
 ```
 
-## Compile and run the project
+## 🚀 Começando
+
+### 1. Clonar o repositório
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+git clone https://github.com/Ameglebm/TesteMultT.git
+cd TesteMultT
 ```
 
-## Run tests
+### 2. Instalar dependências
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm install
 ```
 
-## Deployment
+### 3. Configurar o banco de dados
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+Configure o arquivo `.env` com a sua URL de conexão do banco (PostgreSQL, SQLite, etc):
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+```env
+DATABASE_URL="postgresql://usuario:senha@localhost:5432/seu_banco"
+JWT_SECRET="sua_chave_jwt"
+```
+
+### 4. Rodar as migrações e iniciar o projeto
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+npx prisma migrate dev
+npm run start:dev
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## 🔢 Scripts disponíveis
 
-## Resources
+```bash
+# Modo desenvolvimento
+npm run start:dev
 
-Check out a few resources that may come in handy when working with NestJS:
+# Modo produção
+npm run start:prod
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+# Rodar testes
+npm run test
 
-## Support
+# Testes E2E
+npm run test:e2e
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+# Cobertura de testes
+npm run test:cov
+```
 
-## Stay in touch
+## 🗕️ Funcionalidades principais
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- Cadastro e login com JWT
+- CRUD de lojas, produtos e clientes
+- Orçamentos com produtos/serviços e aprovação
+- Controle financeiro (entradas e saídas)
+- Relatórios de estoque e financeiro
+- Middleware de autenticação com proteção por loja
 
-## License
+## 📦 Deploy
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Esse projeto pode ser deployado em qualquer ambiente Node (Heroku, Vercel com Docker, Railway etc.).
+Atualmente está rodando localmente com banco de dados PostgreSQL hospedado no Railway.
+Recomendação: usar PostgreSQL em produção.
+
+## 📦 Módulos Principais
+
+| Módulo        | Descrição                                      | Endpoints Principais             |
+|---------------|-----------------------------------------------|----------------------------------|
+| **Auth**      | Autenticação JWT e gestão de usuários         | `/auth/login`, `/auth/register`  |
+| **Lojas**     | CRUD de lojas (apenas SuperAdmin)             | `/lojas`, `/lojas/:id`           |
+| **Produtos**  | Gestão de produtos e estoque                  | `/produtos`, `/produtos/estoque` |
+| **Clientes**  | Cadastro e histórico de clientes              | `/clientes`, `/clientes/historico`|
+| **Orçamentos**| Criação e aprovação de orçamentos             | `/orcamentos`, `/orcamentos/aprovar` |
+| **Financeiro**| Controle de entradas/saídas e relatórios      | `/financeiro`, `/financeiro/relatorio` |
+
+## 🚧 Autor
+
+- Nome: **Alisson**
+- GitHub: [Ameglebm](https://github.com/Ameglebm)
+- Email: [ameglevr@gmail.com](mailto:ameglevr@gmail.com)
+
+## ⚖️ Licença
+
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
