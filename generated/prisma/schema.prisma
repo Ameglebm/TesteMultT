@@ -1,0 +1,192 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// =================
+// TIPOS PRÉ-DEFINIDOS
+// =================
+enum PerfilUsuario {
+  SUPERADMIN // Administrador total do sistema
+  GERENTE_LOJA // Gerente de uma loja específica
+  FUNCIONARIO // Vendedor/operacional
+}
+
+enum MetodoPagamento {
+  DINHEIRO
+  PIX
+  CARTAO_DEBITO
+  CARTAO_CREDITO
+}
+
+enum StatusPagamento {
+  PENDENTE
+  PARCIAL
+  PAGO
+  CANCELADO
+}
+
+// =================
+// TABELAS PRINCIPAIS
+// =================
+model Loja {
+  id              String   @id @default(uuid())
+  nome            String   @unique // Ex: "JM Cell"
+  codigoUrl       String   @unique // Ex: "jm-cell"
+  dataCriacao     DateTime @default(now())
+  dataAtualizacao DateTime @updatedAt
+
+  // Relacionamentos:
+  usuarios                 Usuario[]
+  produtos                 Produto[]
+  clientes                 Cliente[]
+  orcamentos               Orcamento[]
+  pagamentos               Pagamento[]
+  movimentacoesFinanceiras FluxoCaixa[]
+  movimentacoesEstoque     MovimentacaoEstoque[]
+
+  configuracoes Json? @default("{}")
+
+  @@map("tenants") // Nome técnico da tabela no banco
+}
+
+model Usuario {
+  id              String        @id @default(uuid())
+  email           String        @unique
+  senha           String
+  nome            String?
+  perfil          PerfilUsuario @default(GERENTE_LOJA)
+  loja            Loja          @relation(fields: [lojaId], references: [id])
+  lojaId          String
+  dataCriacao     DateTime      @default(now())
+  dataAtualizacao DateTime      @updatedAt
+  ultimoLogin     DateTime?
+
+  @@map("users") // Nome técnico
+}
+
+model Produto {
+  id              String                @id @default(uuid())
+  nome            String
+  descricao       String?
+  codigoBarras    String?
+  quantidade      Int                   @default(0)
+  precoCusto      Float                 @default(0.0)
+  precoVenda      Float
+  categoria       String?
+  loja            Loja                  @relation(fields: [lojaId], references: [id])
+  lojaId          String
+  dataCriacao     DateTime              @default(now())
+  dataAtualizacao DateTime              @updatedAt
+  itensOrcamento  ItemOrcamento[]
+  movimentacoes   MovimentacaoEstoque[]
+
+  @@map("products")
+}
+
+model Cliente {
+  id              String      @id @default(uuid())
+  nome            String
+  email           String?
+  telefone        String
+  documento       String? // CPF/CNPJ
+  endereco        String?
+  loja            Loja        @relation(fields: [lojaId], references: [id])
+  lojaId          String
+  dataCriacao     DateTime    @default(now())
+  dataAtualizacao DateTime    @updatedAt
+  orcamentos      Orcamento[]
+
+  @@map("clients")
+}
+
+model Orcamento {
+  id              String          @id @default(uuid())
+  codigo          String          @unique // Ex: "ORC-2023-001"
+  cliente         Cliente         @relation(fields: [clienteId], references: [id])
+  clienteId       String
+  itens           ItemOrcamento[]
+  desconto        Float           @default(0.0)
+  valorTotal      Float
+  observacoes     String?
+  status          String          @default("RASCUNHO") // RASCUNHO|APROVADO|FINALIZADO|CANCELADO
+  loja            Loja            @relation(fields: [lojaId], references: [id])
+  lojaId          String
+  dataCriacao     DateTime        @default(now())
+  dataAtualizacao DateTime        @updatedAt
+  pagamento       Pagamento?
+
+  @@map("budgets")
+}
+
+model ItemOrcamento {
+  id            String    @id @default(uuid())
+  orcamento     Orcamento @relation(fields: [orcamentoId], references: [id])
+  orcamentoId   String
+  produto       Produto?  @relation(fields: [produtoId], references: [id])
+  produtoId     String?
+  servico       String? // Nome do serviço (se for serviço)
+  quantidade    Int       @default(1)
+  precoUnitario Float
+  desconto      Float     @default(0.0)
+  total         Float
+
+  @@map("budget_items")
+}
+
+model Pagamento {
+  id              String          @id @default(uuid())
+  orcamento       Orcamento       @relation(fields: [orcamentoId], references: [id])
+  orcamentoId     String          @unique
+  metodo          MetodoPagamento
+  valor           Float
+  parcelas        Int             @default(1)
+  taxaJuros       Float           @default(0.0)
+  status          StatusPagamento @default(PENDENTE)
+  datasVencimento Json? // Datas das parcelas
+  loja            Loja            @relation(fields: [lojaId], references: [id])
+  lojaId          String
+  dataCriacao     DateTime        @default(now())
+  dataAtualizacao DateTime        @updatedAt
+  fluxosCaixa     FluxoCaixa[]
+
+  @@map("payments")
+}
+
+model FluxoCaixa {
+  id              String          @id @default(uuid())
+  tipo            String // "ENTRADA" ou "SAIDA"
+  valor           Float
+  metodo          MetodoPagamento
+  categoria       String? // Ex: "VENDA", "DESPESA"
+  descricao       String
+  pagamento       Pagamento?      @relation(fields: [pagamentoId], references: [id])
+  pagamentoId     String?
+  loja            Loja            @relation(fields: [lojaId], references: [id])
+  lojaId          String
+  dataCriacao     DateTime        @default(now())
+  dataAtualizacao DateTime        @updatedAt
+
+  @@map("cash_flows")
+}
+
+model MovimentacaoEstoque {
+  id              String   @id @default(uuid())
+  produto         Produto  @relation(fields: [produtoId], references: [id])
+  produtoId       String
+  tipo            String // "ENTRADA" ou "SAIDA"
+  quantidade      Int
+  precoUnitario   Float?
+  motivo          String? // Ex: "COMPRA", "VENDA", "AJUSTE"
+  loja            Loja     @relation(fields: [lojaId], references: [id])
+  lojaId          String
+  dataCriacao     DateTime @default(now())
+  dataAtualizacao DateTime @updatedAt
+
+  @@map("inventory_movements")
+}
