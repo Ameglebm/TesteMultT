@@ -4,6 +4,12 @@ Este é um sistema **multi-tenant** desenvolvido com **NestJS** e **Prisma ORM**
 
 **Estrutura multitenant**: os dados de cada loja (usuários, produtos, clientes, etc.) são associados a um identificador da loja (`lojaId`), permitindo um banco compartilhado com separação lógica.
 
+**Tecnologias principais**:
+- <img height="20" width="25" src="https://skillicons.dev/icons?i=nest" alt="NestJS"> NestJS (Backend Framework)
+- <img height="20" width="25" src="https://skillicons.dev/icons?i=prisma" alt="Prisma"> Prisma ORM (Database)
+- <img height="20" width="25" src="https://skillicons.dev/icons?i=postgres" alt="PostgreSQL"> PostgreSQL (Banco de dados)
+- <img height="20" width="25" src="https://skillicons.dev/icons?i=ts" alt="TypeScript"> TypeScript
+
 ## 📂 Estrutura de Pastas
 
 ```

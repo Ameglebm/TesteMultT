@@ -34,7 +34,22 @@ export class ClientesController {
 
   @Get()
   @ApiOperation({ summary: 'Listar todos os clientes' })
-  @ApiResponse({ status: 200, description: 'Lista de clientes' })
+  @ApiResponse({ status: 200, description: 'Lista de clientes', content: {
+    'application/json': {
+      schema: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            id: { type: 'string', description: 'ID do cliente' },
+            nome: { type: 'string', description: 'Nome do cliente' },
+            email: { type: 'string', description: 'Email do cliente' },
+            lojaId: { type: 'string', description: 'ID da loja associada' },
+          },
+        },
+      },
+    },
+  }})
   @ApiResponse({ status: 404, description: 'Nenhum cliente encontrado' })
   @ApiResponse({ status: 400, description: 'Erro ao buscar clientes' })
   @ApiResponse({ status: 500, description: 'Erro interno do servidor' })
