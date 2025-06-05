@@ -1,10 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common'; 
-import { prisma } from "../../../lib/prisma";
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { prisma } from '../../../lib/prisma';
 import { ILojaRepository } from '../interface/lojasService.interface';
 import { Loja } from '@prisma/client';
 import { UpdateLojaDTO } from '../dtos/lojasDTO';
 
-@Injectable() 
+@Injectable()
 export class LojaRepository implements ILojaRepository {
   async findAll(): Promise<Loja[]> {
     return prisma.loja.findMany({

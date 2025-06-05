@@ -72,7 +72,11 @@ export class CriarOrcamentoDTO {
   @IsNumber({}, { message: 'O número de parcelas deve ser um número' })
   numeroParcelas?: number;
 
-  @ApiProperty({ example: 5.0, required: false, description: 'Taxa de juros (%) se for parcelado' })
+  @ApiProperty({
+    example: 5.0,
+    required: false,
+    description: 'Taxa de juros (%) se for parcelado',
+  })
   @IsOptional()
   @IsNumber({}, { message: 'A taxa de juros deve ser um número' })
   @Min(0, { message: 'A taxa de juros não pode ser negativa' })
@@ -83,9 +87,15 @@ export class CriarOrcamentoDTO {
   @IsNotEmpty({ message: 'A descrição do orçamento não pode ser vazia' })
   descricao!: string;
 
-  @ApiProperty({ example: StatusOrcamento.ABERTO, enum: StatusOrcamento, required: false })
+  @ApiProperty({
+    example: StatusOrcamento.ABERTO,
+    enum: StatusOrcamento,
+    required: false,
+  })
   @IsOptional()
-  @IsEnum(StatusOrcamento, { message: 'O status deve ser um valor válido do enum StatusOrcamento' })
+  @IsEnum(StatusOrcamento, {
+    message: 'O status deve ser um valor válido do enum StatusOrcamento',
+  })
   status?: StatusOrcamento;
 }
 

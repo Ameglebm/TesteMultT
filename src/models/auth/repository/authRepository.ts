@@ -1,12 +1,12 @@
-import { prisma } from "../../../lib/prisma";
-import { IAuthRepository } from "../interface/authRepository.interface";
+import { prisma } from '../../../lib/prisma';
+import { IAuthRepository } from '../interface/authRepository.interface';
 import { Loja } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 
 import {
   SuperAdminCreateLojaDTO,
-  LojaCreateFuncionarioDTO
-} from "../dtos/authDTO";
+  LojaCreateFuncionarioDTO,
+} from '../dtos/authDTO';
 
 export class AuthRepository implements IAuthRepository {
   async criarLoja(data: SuperAdminCreateLojaDTO): Promise<Loja> {
@@ -15,20 +15,20 @@ export class AuthRepository implements IAuthRepository {
         nome: data.nome,
         cnpj: data.cnpj,
         email: data.email,
-        senha: data.senha // senha já vem criptografada do service
-      }
+        senha: data.senha, // senha já vem criptografada do service
+      },
     });
   }
 
   async encontrarLojaPorEmail(email: string): Promise<any | null> {
     return await prisma.loja.findUnique({
-      where: { email }
+      where: { email },
     });
   }
 
   async encontrarLojaPorCnpj(cnpj: string): Promise<any | null> {
     return await prisma.loja.findUnique({
-      where: { cnpj }
+      where: { cnpj },
     });
   }
 
@@ -37,20 +37,23 @@ export class AuthRepository implements IAuthRepository {
       data: {
         nome: data.nome,
         email: data.email,
-        senha: data.senha, 
+        senha: data.senha,
         permissoes: data.permissoes,
-        loja: { connect: { id: data.lojaId } }
-      }
+        loja: { connect: { id: data.lojaId } },
+      },
     });
   }
 
   async encontrarUsuarioPorEmail(email: string): Promise<any | null> {
     return await prisma.usuario.findUnique({
-      where: { email }
+      where: { email },
     });
   }
 
-  async verificarCredenciais(email: string, senha: string): Promise<any | null> {
+  async verificarCredenciais(
+    email: string,
+    senha: string,
+  ): Promise<any | null> {
     const usuario = await this.encontrarUsuarioPorEmail(email);
     if (!usuario) return null;
 

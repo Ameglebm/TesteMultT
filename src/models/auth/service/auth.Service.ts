@@ -80,22 +80,23 @@ export class AuthService {
   ) {
     try {
       if (!lojaId) {
-        throw new BadRequestException('Usuário deve estar vinculado a uma loja.');
+        throw new BadRequestException(
+          'Usuário deve estar vinculado a uma loja.',
+        );
       }
-  
+
       const funcionarioExistente =
         await this.repository.encontrarUsuarioPorEmail(funcionarioDTO.email);
-  
+
       if (funcionarioExistente) {
         throw new ConflictException('Email já cadastrado');
       }
-  
+
       return await this.repository.criarFuncionario({
         ...funcionarioDTO,
         lojaId,
         senha: await bcrypt.hash(funcionarioDTO.senha, 10),
       });
-  
     } catch (error) {
       console.error('❌ Erro ao criar funcionário:');
       console.error('📄 Mensagem:', error.message);
@@ -104,5 +105,4 @@ export class AuthService {
       throw error; // Repassa o erro pro Nest responder corretamente
     }
   }
-  
 }

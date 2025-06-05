@@ -1,8 +1,10 @@
-import { LoginDTO, SuperAdminCreateLojaDTO, LojaCreateFuncionarioDTO } from "../dtos/authDTO";
-import { Loja, Usuario } from "@prisma/client";
+import {
+  SuperAdminCreateLojaDTO,
+  LojaCreateFuncionarioDTO,
+} from '../dtos/authDTO';
+import { Loja, Usuario } from '@prisma/client';
 
 export interface IAuthRepository {
-
   criarLoja(data: SuperAdminCreateLojaDTO): Promise<Loja>;
   encontrarLojaPorEmail(email: string): Promise<Loja | null>;
   encontrarLojaPorCnpj(cnpj: string): Promise<Loja | null>;

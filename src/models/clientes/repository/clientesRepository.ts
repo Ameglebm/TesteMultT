@@ -1,13 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import { prisma } from '../../../lib/prisma'; 
+import { prisma } from '../../../lib/prisma';
 import { IClienteRepository } from '../interface/clientesRepository.interface';
-import { CreateClienteDTO, UpdateClienteDTO, ResponseClienteDTO } from '../dtos/clientesDTO';
+import {
+  CreateClienteDTO,
+  UpdateClienteDTO,
+  ResponseClienteDTO,
+} from '../dtos/clientesDTO';
 
 @Injectable()
 export class ClienteRepository implements IClienteRepository {
-
-
-  async create(data: CreateClienteDTO, lojaId: string): Promise<ResponseClienteDTO> {
+  async create(
+    data: CreateClienteDTO,
+    lojaId: string,
+  ): Promise<ResponseClienteDTO> {
     const cliente = await prisma.cliente.create({
       data: {
         nome: data.nome,
@@ -26,7 +31,7 @@ export class ClienteRepository implements IClienteRepository {
       where: { lojaId },
       orderBy: { nome: 'asc' },
     });
-    return clientes.map(cliente => new ResponseClienteDTO(cliente));
+    return clientes.map((cliente) => new ResponseClienteDTO(cliente));
   }
 
   async findByCpfCnpj(cpfCnpj: string): Promise<ResponseClienteDTO | null> {
@@ -38,7 +43,7 @@ export class ClienteRepository implements IClienteRepository {
 
   async findAll(): Promise<ResponseClienteDTO[]> {
     const clientes = await prisma.cliente.findMany();
-    return clientes.map(cliente => new ResponseClienteDTO(cliente));
+    return clientes.map((cliente) => new ResponseClienteDTO(cliente));
   }
 
   async findById(id: string): Promise<ResponseClienteDTO | null> {
@@ -48,7 +53,10 @@ export class ClienteRepository implements IClienteRepository {
     return cliente ? new ResponseClienteDTO(cliente) : null;
   }
 
-  async update(id: string, data: UpdateClienteDTO): Promise<ResponseClienteDTO> {
+  async update(
+    id: string,
+    data: UpdateClienteDTO,
+  ): Promise<ResponseClienteDTO> {
     const cliente = await prisma.cliente.update({
       where: { id },
       data: {

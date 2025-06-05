@@ -22,4 +22,3 @@ import { IFinanceiroRepository } from './interface/financeiroRepository.interfac
   ],
 })
 export class FinanceiroModule {}
-

@@ -1,4 +1,9 @@
-import { Inject, Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { CriarOrcamentoDTO } from '../dtos/orcamentosDTO';
 import { IOrcamentosRepository } from '../interface/orcamentosRepository.interface';
 import { ResponseOrcamentoDTO } from '../dtos/orcamentosDTO';
@@ -10,18 +15,25 @@ export class OrcamentosService {
     private readonly orcamentosRepository: IOrcamentosRepository,
   ) {}
 
-  async criarOrcamento(data: CriarOrcamentoDTO, lojaId: string): Promise<ResponseOrcamentoDTO> {
+  async criarOrcamento(
+    data: CriarOrcamentoDTO,
+    lojaId: string,
+  ): Promise<ResponseOrcamentoDTO> {
     const semProdutos = !data.itens || data.itens.length === 0;
     const semServicos = !data.servicos || data.servicos.length === 0;
 
     if (semProdutos && semServicos) {
-      throw new BadRequestException('É necessário incluir ao menos um produto ou um serviço no orçamento.');
+      throw new BadRequestException(
+        'É necessário incluir ao menos um produto ou um serviço no orçamento.',
+      );
     }
 
     return this.orcamentosRepository.create(data, lojaId);
   }
 
-  async listarOrcamentosPorLoja(lojaId: string): Promise<ResponseOrcamentoDTO[]> {
+  async listarOrcamentosPorLoja(
+    lojaId: string,
+  ): Promise<ResponseOrcamentoDTO[]> {
     return this.orcamentosRepository.findAllByLoja(lojaId);
   }
 
@@ -31,7 +43,10 @@ export class OrcamentosService {
     return orcamento;
   }
 
-  async atualizarOrcamento(id: string, data: Partial<CriarOrcamentoDTO>): Promise<ResponseOrcamentoDTO> {
+  async atualizarOrcamento(
+    id: string,
+    data: Partial<CriarOrcamentoDTO>,
+  ): Promise<ResponseOrcamentoDTO> {
     if (data.status) {
       await this.orcamentosRepository.updateStatus(id, data.status);
     }

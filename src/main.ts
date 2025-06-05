@@ -7,7 +7,7 @@ async function bootstrap() {
 
   app.enableCors({
     origin: ['http://localhost:5173', 'https://seu-frontend-em-producao.com'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH',],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   });
 
@@ -28,7 +28,7 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document); // Rota: http://localhost:3333/api
+  SwaggerModule.setup('api', app, document);
 
   await app.listen(3333);
   console.log('🚀 Swagger disponível em: http://localhost:3333/api');

@@ -17,7 +17,7 @@ export class FinanceiroService {
 
   async registrarSaidaManual(
     lojaId: string,
-    dto: CriarSaidaFinanceiraDTO
+    dto: CriarSaidaFinanceiraDTO,
   ): Promise<ResponseMovimentacaoFinanceiraDTO> {
     const tipo = TipoMovimentacao.SAIDA;
 
@@ -47,21 +47,31 @@ export class FinanceiroService {
   async gerarRelatorioFinanceiro(
     lojaId: string,
     dataInicio: Date,
-    dataFim: Date
+    dataFim: Date,
   ): Promise<RelatorioFinanceiroDTO> {
     if (dataInicio > dataFim) {
-      throw new BadRequestException('Data de início não pode ser maior que a data de fim.');
+      throw new BadRequestException(
+        'Data de início não pode ser maior que a data de fim.',
+      );
     }
 
-    return this.financeiroRepository.calcularRelatorio(lojaId, dataInicio, dataFim);
+    return this.financeiroRepository.calcularRelatorio(
+      lojaId,
+      dataInicio,
+      dataFim,
+    );
   }
 
   async listarTodasMovimentacoes(
     lojaId: string,
     dataInicio?: Date,
-    dataFim?: Date
+    dataFim?: Date,
   ): Promise<ResponseMovimentacaoFinanceiraDTO[]> {
-    const movimentacoes = await this.financeiroRepository.listarPorLoja(lojaId, dataInicio, dataFim);
+    const movimentacoes = await this.financeiroRepository.listarPorLoja(
+      lojaId,
+      dataInicio,
+      dataFim,
+    );
 
     return movimentacoes.map((m) => ({
       id: m.id,
@@ -83,14 +93,14 @@ export class FinanceiroService {
     lojaId: string,
     metodoPagamento: MetodoPagamento,
     valor: number,
-    descricao: string
+    descricao: string,
   ): Promise<ResponseMovimentacaoFinanceiraDTO> {
     const movimentacao = await this.financeiroRepository.editarMovimentacao(
       id,
       lojaId,
       metodoPagamento,
       valor,
-      descricao
+      descricao,
     );
 
     return {
@@ -103,5 +113,4 @@ export class FinanceiroService {
       criadoEm: movimentacao.criadoEm,
     };
   }
-  
 }

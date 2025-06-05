@@ -1,16 +1,23 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsOptional, IsString } from 'class-validator';
 import { v4 as uuidv4 } from 'uuid';
-import { Loja } from '@prisma/client'; // precisa disso para tipar o construtor
+import { Loja } from '@prisma/client';
 
-// DTO para atualização de dados da loja
 export class UpdateLojaDTO {
-  @ApiProperty({ example: 'Nova JM Cell', description: 'Novo nome da loja', required: false })
+  @ApiProperty({
+    example: 'Nova JM Cell',
+    description: 'Novo nome da loja',
+    required: false,
+  })
   @IsOptional()
   @IsString({ message: 'Nome deve ser texto' })
   nome?: string;
 
-  @ApiProperty({ example: 'contato@novaloja.com', description: 'Novo e-mail da loja', required: false })
+  @ApiProperty({
+    example: 'contato@novaloja.com',
+    description: 'Novo e-mail da loja',
+    required: false,
+  })
   @IsOptional()
   @IsEmail({}, { message: 'E-mail inválido' })
   email?: string;
@@ -30,7 +37,10 @@ export class ResponseLojaDTO {
   @ApiProperty({ example: 'contato@jmcell.com', description: 'E-mail da loja' })
   email!: string;
 
-  @ApiProperty({ example: '2024-04-22T12:34:56Z', description: 'Data de criação da loja' })
+  @ApiProperty({
+    example: '2024-04-22T12:34:56Z',
+    description: 'Data de criação da loja',
+  })
   criadoEm!: Date;
 
   constructor(loja: Loja) {

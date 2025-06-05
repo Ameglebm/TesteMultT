@@ -4,12 +4,21 @@ import { prisma } from '../../../lib/prisma';
 import { StatusOrcamento } from '@prisma/client';
 
 export class OrcamentosRepository implements IOrcamentosRepository {
-  async create(data: CriarOrcamentoDTO, lojaId: string): Promise<ResponseOrcamentoDTO> {
+  async create(
+    data: CriarOrcamentoDTO,
+    lojaId: string,
+  ): Promise<ResponseOrcamentoDTO> {
     const itens = data.itens ?? [];
     const servicos = data.servicos ?? [];
 
-    const totalProdutos = itens.reduce((sum, item) => sum + item.quantidade * item.precoUnitario, 0);
-    const totalServicos = servicos.reduce((sum, servico) => sum + servico.valor, 0);
+    const totalProdutos = itens.reduce(
+      (sum, item) => sum + item.quantidade * item.precoUnitario,
+      0,
+    );
+    const totalServicos = servicos.reduce(
+      (sum, servico) => sum + servico.valor,
+      0,
+    );
     const totalSemJuros = totalProdutos + totalServicos;
 
     const total = data.taxaJuros

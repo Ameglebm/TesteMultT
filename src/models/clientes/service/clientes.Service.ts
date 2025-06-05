@@ -1,12 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { ClienteRepository } from '../repository/clientesRepository';
-import { CreateClienteDTO, UpdateClienteDTO, ResponseClienteDTO } from '../dtos/clientesDTO';
+import {
+  CreateClienteDTO,
+  UpdateClienteDTO,
+  ResponseClienteDTO,
+} from '../dtos/clientesDTO';
 
 @Injectable()
 export class ClienteService {
   constructor(private readonly clienteRepository: ClienteRepository) {}
 
-  async create(data: CreateClienteDTO, lojaId: string): Promise<ResponseClienteDTO> {
+  async create(
+    data: CreateClienteDTO,
+    lojaId: string,
+  ): Promise<ResponseClienteDTO> {
     return this.clienteRepository.create(data, lojaId);
   }
 
@@ -24,11 +31,13 @@ export class ClienteService {
 
   async findAllByLoja(lojaId: string): Promise<ResponseClienteDTO[]> {
     const clientes = await this.clienteRepository.findByLojaId(lojaId);
-    return clientes.map(cliente => new ResponseClienteDTO(cliente));
-}
+    return clientes.map((cliente) => new ResponseClienteDTO(cliente));
+  }
 
-
-  async update(id: string, data: UpdateClienteDTO): Promise<ResponseClienteDTO> {
+  async update(
+    id: string,
+    data: UpdateClienteDTO,
+  ): Promise<ResponseClienteDTO> {
     return this.clienteRepository.update(id, data);
   }
 
