@@ -13,47 +13,79 @@ export class CreateClienteDTO {
   @IsNotEmpty()
   email!: string;
 
-  @ApiProperty({ example: '11999998888', description: 'Telefone do cliente (Whatsapp)' })
+  @ApiProperty({
+    example: '11999998888',
+    description: 'Telefone do cliente (Whatsapp)',
+  })
   @IsString({ message: 'Telefone deve ser texto' })
   @IsNotEmpty()
   telefone!: string;
 
-  @ApiProperty({ example: '12345678900', description: 'CPF ou CNPJ do cliente' })
+  @ApiProperty({
+    example: '12345678900',
+    description: 'CPF ou CNPJ do cliente',
+  })
   @IsString({ message: 'CPF/CNPJ deve ser texto' })
   @IsNotEmpty()
   @Length(11, 14) // 11 para CPF, 14 para CNPJ
   cpfCnpj!: string;
 
-  @ApiProperty({ example: 'Rua das Flores, 123 - Centro', description: 'Endereço completo' })
+  @ApiProperty({
+    example: 'Rua das Flores, 123 - Centro',
+    description: 'Endereço completo',
+  })
   @IsString({ message: 'Endereço deve ser texto' })
   @IsNotEmpty()
   endereco!: string;
 
-  @ApiProperty({ example: 'uuid-loja-123', description: 'ID da loja associada' })
+  @ApiProperty({
+    example: 'uuid-loja-123',
+    description: 'ID da loja associada',
+  })
   @IsString({ message: 'Loja ID deve ser um texto válido' })
   @IsNotEmpty()
   lojaId!: string;
 }
 
 export class UpdateClienteDTO {
-  @ApiProperty({ example: 'João da Silva', description: 'Nome do cliente', required: false })
+  @ApiProperty({
+    example: 'João da Silva',
+    description: 'Nome do cliente',
+    required: false,
+  })
   @IsString()
   nome?: string;
 
-  @ApiProperty({ example: 'joao@gmail.com', description: 'Email do cliente', required: false })
+  @ApiProperty({
+    example: 'joao@gmail.com',
+    description: 'Email do cliente',
+    required: false,
+  })
   @IsEmail({}, { message: 'O email deve ser válido' })
   email?: string;
 
-  @ApiProperty({ example: '11999998888', description: 'Telefone do cliente', required: false })
+  @ApiProperty({
+    example: '11999998888',
+    description: 'Telefone do cliente',
+    required: false,
+  })
   @IsString({ message: 'Telefone deve ser texto' })
   telefone?: string;
 
-  @ApiProperty({ example: '12345678900', description: 'CPF ou CNPJ', required: false })
+  @ApiProperty({
+    example: '12345678900',
+    description: 'CPF ou CNPJ',
+    required: false,
+  })
   @IsString({ message: 'CPF/CNPJ deve ser texto' })
   @Length(11, 14)
   cpfCnpj?: string;
 
-  @ApiProperty({ example: 'Rua das Flores, 123 - Centro', description: 'Endereço completo', required: false })
+  @ApiProperty({
+    example: 'Rua das Flores, 123 - Centro',
+    description: 'Endereço completo',
+    required: false,
+  })
   @IsString({ message: 'Endereço deve ser texto' })
   endereco?: string;
 }
@@ -91,6 +123,6 @@ export class ResponseClienteDTO {
     this.cpfCnpj = cliente.cpfCnpj;
     this.endereco = cliente.endereco;
     this.lojaId = cliente.lojaId;
-    this.criadoEm = cliente.criadoEm;  // Usando o campo correto
+    this.criadoEm = cliente.criadoEm; // Usando o campo correto
   }
 }

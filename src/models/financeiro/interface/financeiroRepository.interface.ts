@@ -1,5 +1,8 @@
 import { MetodoPagamento } from '@prisma/client';
-import { RelatorioFinanceiroDTO, ResponseMovimentacaoFinanceiraDTO } from '../dtos/financeiroDTO';
+import {
+  RelatorioFinanceiroDTO,
+  ResponseMovimentacaoFinanceiraDTO,
+} from '../dtos/financeiroDTO';
 
 export const IFinanceiroRepository = 'IFinanceiroRepository';
 
@@ -9,7 +12,7 @@ export interface IFinanceiroRepository {
     tipo: 'ENTRADA' | 'SAIDA',
     metodoPagamento: MetodoPagamento,
     valor: number,
-    descricao: string
+    descricao: string,
   ): Promise<{
     id: string;
     lojaId: string;
@@ -20,9 +23,17 @@ export interface IFinanceiroRepository {
     criadoEm: Date;
   }>;
 
-  calcularRelatorio(lojaId: string, inicio: Date, fim: Date): Promise<RelatorioFinanceiroDTO>;
+  calcularRelatorio(
+    lojaId: string,
+    inicio: Date,
+    fim: Date,
+  ): Promise<RelatorioFinanceiroDTO>;
 
-  listarPorLoja(lojaId: string, inicio?: Date, fim?: Date): Promise<ResponseMovimentacaoFinanceiraDTO[]>;
+  listarPorLoja(
+    lojaId: string,
+    inicio?: Date,
+    fim?: Date,
+  ): Promise<ResponseMovimentacaoFinanceiraDTO[]>;
 
   removerMovimentacao(id: string, lojaId: string): Promise<void>;
 
@@ -31,6 +42,6 @@ export interface IFinanceiroRepository {
     lojaId: string,
     metodoPagamento: MetodoPagamento,
     valor: number,
-    descricao: string
+    descricao: string,
   ): Promise<ResponseMovimentacaoFinanceiraDTO>;
 }

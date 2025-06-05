@@ -48,19 +48,20 @@ export class ProdutoRepository {
   }
 
   async gerarRelatorioEstoque(lojaId: string) {
-  const produtos = await prisma.produto.findMany({ where: { lojaId } });
+    const produtos = await prisma.produto.findMany({ where: { lojaId } });
 
-  const totalProdutos = produtos.length;
-  const quantidadeTotal = produtos.reduce((soma, p) => soma + p.estoque, 0);
-  const valorTotal = produtos.reduce((soma, p) => soma + (p.estoque * p.precoCusto), 0);
+    const totalProdutos = produtos.length;
+    const quantidadeTotal = produtos.reduce((soma, p) => soma + p.estoque, 0);
+    const valorTotal = produtos.reduce(
+      (soma, p) => soma + p.estoque * p.precoCusto,
+      0,
+    );
 
-  return {
-    produtos,
-    totalProdutos,
-    quantidadeTotal,
-    valorTotal,
-  };
+    return {
+      produtos,
+      totalProdutos,
+      quantidadeTotal,
+      valorTotal,
+    };
+  }
 }
-
-}
-

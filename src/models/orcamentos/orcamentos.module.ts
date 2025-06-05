@@ -9,8 +9,8 @@ import { IOrcamentosRepository } from './interface/orcamentosRepository.interfac
   providers: [
     OrcamentosService,
     {
-      provide: IOrcamentosRepository, // aqui você vincula a interface
-      useClass: OrcamentosRepository, // à classe concreta
+      provide: IOrcamentosRepository,
+      useClass: OrcamentosRepository,
     },
   ],
 })

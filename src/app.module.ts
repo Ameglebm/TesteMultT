@@ -19,7 +19,6 @@ import { FinanceiroModule } from './models/financeiro/financeiro.module';
     ProdutosModule,
     OrcamentosModule,
     FinanceiroModule,
-
   ],
 })
 export class AppModule {}

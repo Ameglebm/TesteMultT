@@ -10,7 +10,7 @@ export class FinanceiroRepository {
     tipo: TipoMovimentacao,
     metodoPagamento: MetodoPagamento,
     valor: number,
-    descricao: string
+    descricao: string,
   ) {
     return prisma.movimentacaoFinanceira.create({
       data: {
@@ -36,71 +36,70 @@ export class FinanceiroRepository {
   }
 
   // Método para calcular relatório financeiro
-async calcularRelatorio(
-  lojaId: string,
-  inicio: Date,
-  fim: Date
-): Promise<{
-  totalEntradas: number;
-  totalSaidas: number;
-  saldo: number;
-  totalPorMetodo: Record<MetodoPagamento, number>;
-}> {
-  // 🔍 Função para verificar se a data é válida
-  function isValidDate(date: any): date is Date {
-    return date instanceof Date && !isNaN(date.getTime());
-  }
+  async calcularRelatorio(
+    lojaId: string,
+    inicio: Date,
+    fim: Date,
+  ): Promise<{
+    totalEntradas: number;
+    totalSaidas: number;
+    saldo: number;
+    totalPorMetodo: Record<MetodoPagamento, number>;
+  }> {
+    // 🔍 Função para verificar se a data é válida
+    function isValidDate(date: any): date is Date {
+      return date instanceof Date && !isNaN(date.getTime());
+    }
 
-  // 🛡️ Validação das datas recebidas
-  const dataInicio = new Date(inicio);
-  const dataFim = new Date(fim);
+    // 🛡️ Validação das datas recebidas
+    const dataInicio = new Date(inicio);
+    const dataFim = new Date(fim);
 
-  if (!isValidDate(dataInicio) || !isValidDate(dataFim)) {
-    throw new Error('Datas inválidas para o relatório financeiro.');
-  }
+    if (!isValidDate(dataInicio) || !isValidDate(dataFim)) {
+      throw new Error('Datas inválidas para o relatório financeiro.');
+    }
 
-  // 📦 Buscar movimentações dentro do intervalo
-  const movimentacoes = await prisma.movimentacaoFinanceira.findMany({
-    where: {
-      lojaId,
-      criadoEm: {
-        gte: dataInicio,
-        lte: dataFim,
+    // 📦 Buscar movimentações dentro do intervalo
+    const movimentacoes = await prisma.movimentacaoFinanceira.findMany({
+      where: {
+        lojaId,
+        criadoEm: {
+          gte: dataInicio,
+          lte: dataFim,
+        },
       },
-    },
-  });
+    });
 
-  // 📊 Cálculos dos totais
-  const totalEntradas = movimentacoes
-    .filter((m) => m.tipo === TipoMovimentacao.ENTRADA)
-    .reduce((acc, curr) => acc + curr.valor, 0);
-
-  const totalSaidas = movimentacoes
-    .filter((m) => m.tipo === TipoMovimentacao.SAIDA)
-    .reduce((acc, curr) => acc + curr.valor, 0);
-
-  const saldo = totalEntradas - totalSaidas;
-
-  // 📋 Total por método de pagamento
-  const totalPorMetodo: Record<MetodoPagamento, number> = {} as Record<
-    MetodoPagamento,
-    number
-  >;
-
-  for (const metodo of Object.values(MetodoPagamento)) {
-    totalPorMetodo[metodo] = movimentacoes
-      .filter((m) => m.metodoPagamento === metodo)
+    // 📊 Cálculos dos totais
+    const totalEntradas = movimentacoes
+      .filter((m) => m.tipo === TipoMovimentacao.ENTRADA)
       .reduce((acc, curr) => acc + curr.valor, 0);
+
+    const totalSaidas = movimentacoes
+      .filter((m) => m.tipo === TipoMovimentacao.SAIDA)
+      .reduce((acc, curr) => acc + curr.valor, 0);
+
+    const saldo = totalEntradas - totalSaidas;
+
+    // 📋 Total por método de pagamento
+    const totalPorMetodo: Record<MetodoPagamento, number> = {} as Record<
+      MetodoPagamento,
+      number
+    >;
+
+    for (const metodo of Object.values(MetodoPagamento)) {
+      totalPorMetodo[metodo] = movimentacoes
+        .filter((m) => m.metodoPagamento === metodo)
+        .reduce((acc, curr) => acc + curr.valor, 0);
+    }
+
+    return {
+      totalEntradas,
+      totalSaidas,
+      saldo,
+      totalPorMetodo,
+    };
   }
-
-  return {
-    totalEntradas,
-    totalSaidas,
-    saldo,
-    totalPorMetodo,
-  };
-}
-
 
   // Método para remover uma movimentação financeira
   async removerMovimentacao(id: string, lojaId: string): Promise<void> {
@@ -117,7 +116,13 @@ async calcularRelatorio(
     });
   }
 
-  async editarMovimentacao(id: string, lojaId: string, metodoPagamento: MetodoPagamento, valor: number, descricao: string) {
+  async editarMovimentacao(
+    id: string,
+    lojaId: string,
+    metodoPagamento: MetodoPagamento,
+    valor: number,
+    descricao: string,
+  ) {
     const movimentacao = await prisma.movimentacaoFinanceira.findFirst({
       where: { id, lojaId },
     });
@@ -134,6 +139,5 @@ async calcularRelatorio(
         descricao,
       },
     });
-
   }
 }

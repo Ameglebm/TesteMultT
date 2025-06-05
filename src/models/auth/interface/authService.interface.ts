@@ -1,25 +1,29 @@
-import { LoginDTO, SuperAdminCreateLojaDTO, LojaCreateFuncionarioDTO } from "../dtos/authDTO";
+import {
+  LoginDTO,
+  SuperAdminCreateLojaDTO,
+  LojaCreateFuncionarioDTO,
+} from '../dtos/authDTO';
 
 export interface IAuthService {
   // Autenticação
-  login(loginDTO: LoginDTO): Promise<{ 
-    access_token: string; 
-    loja: { 
-      id: string; 
-      nome: string 
-    } 
+  login(loginDTO: LoginDTO): Promise<{
+    access_token: string;
+    loja: {
+      id: string;
+      nome: string;
+    };
   }>;
 
   // Operações de SuperAdmin
-  criarLoja(lojaDTO: SuperAdminCreateLojaDTO): Promise<{ 
-    id: string; 
-    nome: string 
+  criarLoja(lojaDTO: SuperAdminCreateLojaDTO): Promise<{
+    id: string;
+    nome: string;
   }>;
 
   // Operações de Loja
-  criarFuncionario(funcionarioDTO: LojaCreateFuncionarioDTO): Promise<{ 
-    id: string; 
-    nome: string; 
-    email: string 
+  criarFuncionario(funcionarioDTO: LojaCreateFuncionarioDTO): Promise<{
+    id: string;
+    nome: string;
+    email: string;
   }>;
 }

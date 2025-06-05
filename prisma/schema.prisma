@@ -26,103 +26,101 @@ enum TipoMovimentacao {
   SAIDA
 }
 
-
 model Loja {
-  id          String              @id @default(uuid())
-  nome        String              @unique
-  cnpj        String              @unique
-  email       String              @unique
-  senha       String
-  criadoEm    DateTime            @default(now())
+  id       String   @id @default(uuid())
+  nome     String   @unique
+  cnpj     String   @unique
+  email    String   @unique
+  senha    String
+  criadoEm DateTime @default(now())
 
   // Relacionamentos
-  produtos    Produto[]
-  clientes    Cliente[]
-  orcamentos  Orcamento[]
-  funcionarios Usuario[]
-  movimentacoesEstoque MovimentacaoEstoque[]
+  produtos                 Produto[]
+  clientes                 Cliente[]
+  orcamentos               Orcamento[]
+  funcionarios             Usuario[]
+  movimentacoesEstoque     MovimentacaoEstoque[]
   movimentacoesFinanceiras MovimentacaoFinanceira[]
 
   @@map("lojas")
 }
 
 model Usuario {
-  id          String   @id @default(uuid())
-  nome        String
-  email       String   @unique
-  senha       String
-  loja        Loja?    @relation(fields: [lojaId], references: [id])
-  lojaId      String?  
-  ativo       Boolean  @default(true)
-  permissoes  String[]
+  id         String   @id @default(uuid())
+  nome       String
+  email      String   @unique
+  senha      String
+  loja       Loja?    @relation(fields: [lojaId], references: [id])
+  lojaId     String?
+  ativo      Boolean  @default(true)
+  permissoes String[]
 
   @@map("usuarios")
 }
 
-
 model Produto {
-  id          String              @id @default(uuid())
-  nome        String
-  estoque     Int                 @default(0)
-  precoCusto  Float
-  precoVenda  Float?
-  loja        Loja                @relation(fields: [lojaId], references: [id])
-  lojaId      String
+  id             String                @id @default(uuid())
+  nome           String
+  estoque        Int                   @default(0)
+  precoCusto     Float
+  precoVenda     Float?
+  loja           Loja                  @relation(fields: [lojaId], references: [id])
+  lojaId         String
   itensOrcamento ItemOrcamento[]
-  movimentacoes MovimentacaoEstoque[]
+  movimentacoes  MovimentacaoEstoque[]
 
   @@map("produtos")
 }
 
 model Cliente {
-  id          String     @id @default(uuid())
-  nome        String
-  email       String     @unique
-  telefone    String
-  cpfCnpj     String     @unique
-  endereco    String
-  loja        Loja       @relation(fields: [lojaId], references: [id])
-  lojaId      String
-  criadoEm    DateTime   @default(now())
-  orcamentos  Orcamento[]
+  id         String      @id @default(uuid())
+  nome       String
+  email      String      @unique
+  telefone   String
+  cpfCnpj    String      @unique
+  endereco   String
+  loja       Loja        @relation(fields: [lojaId], references: [id])
+  lojaId     String
+  criadoEm   DateTime    @default(now())
+  orcamentos Orcamento[]
 
   @@map("clientes")
 }
 
 model Orcamento {
-  id               String            @id @default(uuid())
-  cliente          Cliente?          @relation(fields: [clienteId], references: [id])
-  clienteId        String?
-  itens            ItemOrcamento[]
-  servicos         Servico[]
-  total            Float
-  status           StatusOrcamento  @default(ABERTO)
-  metodoPagamento  MetodoPagamento?
-  numeroParcelas   Int?              // só preenche se for crédito parcelado
-  taxaJuros        Float?            // porcentagem, ex: 5.0 representa 5%
-  descricao        String
-  loja             Loja              @relation(fields: [lojaId], references: [id])
-  lojaId           String
-  criadoEm         DateTime          @default(now())
+  id              String           @id @default(uuid())
+  cliente         Cliente?         @relation(fields: [clienteId], references: [id])
+  clienteId       String?
+  itens           ItemOrcamento[]
+  servicos        Servico[]
+  total           Float
+  status          StatusOrcamento  @default(ABERTO)
+  metodoPagamento MetodoPagamento?
+  numeroParcelas  Int? // só preenche se for crédito parcelado
+  taxaJuros       Float? // porcentagem, ex: 5.0 representa 5%
+  descricao       String
+  loja            Loja             @relation(fields: [lojaId], references: [id])
+  lojaId          String
+  criadoEm        DateTime         @default(now())
 
   @@map("orcamentos")
 }
 
 model ItemOrcamento {
-  id          String      @id @default(uuid())
-  orcamento   Orcamento   @relation(fields: [orcamentoId], references: [id])
-  orcamentoId String
-  produto     Produto?     @relation(fields: [produtoId], references: [id])
-  produtoId   String?
-  quantidade  Int         @default(1)
+  id            String    @id @default(uuid())
+  orcamento     Orcamento @relation(fields: [orcamentoId], references: [id])
+  orcamentoId   String
+  produto       Produto?  @relation(fields: [produtoId], references: [id])
+  produtoId     String?
+  quantidade    Int       @default(1)
   precoUnitario Float
 
   @@map("itens_orcamento")
 }
 
 model Servico {
-  id          String      @id @default(uuid())
-  orcamento   Orcamento   @relation(fields: [orcamentoId], references: [id])
+  id          String    @id @default(uuid())
+  orcamento   Orcamento @relation(fields: [orcamentoId], references: [id])
   orcamentoId String
   descricao   String
   valor       Float
@@ -131,28 +129,28 @@ model Servico {
 }
 
 model MovimentacaoEstoque {
-  id          String      @id @default(uuid())
-  produto     Produto     @relation(fields: [produtoId], references: [id])
-  produtoId   String
-  quantidade  Int         // Negativo para saída, positivo para entrada
-  motivo      String      // "VENDA", "COMPRA", "AJUSTE"
-  loja        Loja        @relation(fields: [lojaId], references: [id])
-  lojaId      String
-  data        DateTime    @default(now())
+  id         String   @id @default(uuid())
+  produto    Produto  @relation(fields: [produtoId], references: [id])
+  produtoId  String
+  quantidade Int // Negativo para saída, positivo para entrada
+  motivo     String // "VENDA", "COMPRA", "AJUSTE"
+  loja       Loja     @relation(fields: [lojaId], references: [id])
+  lojaId     String
+  data       DateTime @default(now())
 
   @@map("movimentacoes_estoque")
 }
 
 model MovimentacaoFinanceira {
-  id             String      @id @default(uuid())
-  tipo           TipoMovimentacao  // Entrada ou Saída
-  valor          Float
-  metodoPagamento MetodoPagamento  // Forma de pagamento (PIX, DINHEIRO, DÉBITO, CRÉDITO AVISTA, CRÉDITO PARCELADO)
-  descricao      String      // Descrição da movimentação (ex: "Pagamento de orçamento aprovado", "Pagamento de serviço")
-  criadoEm       DateTime    @default(now())  // Campo criadoEm adicionado aqui
-  data           DateTime    @default(now())  // Data da movimentação
-  loja           Loja        @relation(fields: [lojaId], references: [id])
-  lojaId         String
+  id              String           @id @default(uuid())
+  tipo            TipoMovimentacao
+  valor           Float
+  metodoPagamento MetodoPagamento
+  descricao       String
+  criadoEm        DateTime         @default(now())
+  data            DateTime         @default(now())
+  loja            Loja             @relation(fields: [lojaId], references: [id])
+  lojaId          String
 
   @@map("movimentacoes_financeiras")
 }

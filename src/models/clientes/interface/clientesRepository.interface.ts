@@ -1,4 +1,8 @@
-import { CreateClienteDTO, UpdateClienteDTO, ResponseClienteDTO } from '../dtos/clientesDTO';
+import {
+  CreateClienteDTO,
+  UpdateClienteDTO,
+  ResponseClienteDTO,
+} from '../dtos/clientesDTO';
 
 export interface IClienteRepository {
   findAll(): Promise<ResponseClienteDTO[]>; // Retorna todos os clientes
